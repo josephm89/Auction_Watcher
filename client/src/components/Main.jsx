@@ -1,4 +1,5 @@
 import React from 'react'
+import {convertToGold} from '../helper/convert_to_gold'
 
 class Main extends React.Component {
 
@@ -23,29 +24,6 @@ class Main extends React.Component {
     }
     swapped ? this.bubbleSort(array, count++) : null;
   }
-
-
-
-  convertToGold(number){
-    if(number){
-
-      // split into int array:
-      var array = number.toString().split("").map(function(num){return parseInt(num)})
-
-      // reverse it
-      var reversed = [];
-      for(var i = array.length-1; i >= 0; i--) {
-        reversed.push(array[i]);
-      }
-      
-      // make int from index 3 . 4++++
-
-      var endValue = reversed[4] +"."+ reversed[3] + reversed[2]
-
-      return endValue
-    }
-  }
-
 
 
   showCloth(){
@@ -125,7 +103,7 @@ class Main extends React.Component {
             <tr>
               <td>124437</td>
               <td>CLOTH</td>
-              <td>{this.convertToGold(this.state.clothprice[0])}</td>
+              <td>{convertToGold(this.state.clothprice[0])}</td>
               <td>{this.state.clothprice[1]}</td>
               <td>{this.state.clothprice[2]}</td>
               <td>{this.state.clothprice[3]}</td>
