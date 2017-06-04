@@ -4,6 +4,7 @@ import Item from './Item.jsx';
 class ItemTable extends React.Component{
 
   render(){
+    console.log("here",this.props.trackedAuctions)
     const items = this.props.trackedAuctions.map((element) => {
       return (
         <Item itemId={element.itemId} key={element.itemId} prices={element.prices}>
@@ -16,7 +17,6 @@ class ItemTable extends React.Component{
               <tbody>
               <tr>
                 <th>itemid</th>
-                <th>name</th>
                 <th>lowest price1</th>
                 <th>lowest price2</th>
                 <th>lowest price3</th>

@@ -1,10 +1,7 @@
 import React from 'react'
-
 import { bubbleSort } from '../helper/sorter'
-import List from './List'
 import ItemTable from './ItemTable'
 import ItemForm from './ItemForm'
-
 
 class Main extends React.Component {
 
@@ -13,7 +10,7 @@ class Main extends React.Component {
     this.state = { 
       data: [],   /// url init
       auctions: [],       /// all auctions
-      trackedAuctions: [{itemId: 133678, prices: [12312,41241,1241,1241]}]
+      trackedAuctions: JSON.parse(localStorage.getItem('savedAuctions')) || []
     }
   }
 
@@ -35,10 +32,13 @@ class Main extends React.Component {
     const newItem = {itemId: typedId.itemId, prices: priceArray}
     console.log("new item",newItem)
     this.setState((prevState) => {
+      localStorage.setItem('savedAuctions',JSON.stringify(prevState.trackedAuctions.concat([newItem])))
       return {
         trackedAuctions: prevState.trackedAuctions.concat([newItem])
       }
     })
+
+
   }
 
 

@@ -1,19 +1,50 @@
 export function convertToGold(number){
-    if(number){
+  if(number){
 
       // split into int array:
       var array = number.toString().split("").map(function(num){return parseInt(num)})
-
-      // reverse it
-      var reversed = [];
-      for(var i = array.length-1; i >= 0; i--) {
-        reversed.push(array[i]);
-      }
       
-      // make int from index 3 . 4++++
+      switch(true) {
+        case array.length<3:// only show copper
+          var pos3 = array.length+2
+          array.splice(pos3,0,"c")
+          var arrays= array.join()
+          var string = arrays.split(',').join('')
+          return string
+          break;
+        
+        case array.length<5:
+          var pos2 = array.length-2
+          var pos3 = array.length+1
+          array.splice(pos2,0,"s")
+          array.splice(pos3,0,"c")
+          var arrays= array.join()
+          var string = arrays.split(',').join('')
+          return string// show g s c;
+          break;
+        
+        default:
+          var pos1 = array.length-4
+          var pos2 = array.length-1
+          var pos3 = array.length+2
+          array.splice(pos1,0,"g")
+          array.splice(pos2,0,"s")
+          array.splice(pos3,0,"c")
+          var arrays= array.join()
+          var string = arrays.split(',').join('')
+            return string// show g s c;
+          }
 
-      var endValue = reversed[4] +"."+ reversed[3] + reversed[2]
 
-      return endValue
-    }
-  }
+          }
+        }
+
+     
+// // reverse it
+//       var reversed = [];
+//       for(var i = array.length-1; i >= 0; i--) {
+//         reversed.push(array[i]);
+//       }
+
+//       var endValue = reversed.join()
+//       var string = endValue.split(',').join('')
