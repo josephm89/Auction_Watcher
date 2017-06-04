@@ -1,64 +1,50 @@
 import React from 'react'
-import {convertToGold} from '../helper/convert_to_gold'
+
+import { bubbleSort } from '../helper/sorter'
+import List from './List'
+import ItemTable from './ItemTable'
+import ItemForm from './ItemForm'
+
 
 class Main extends React.Component {
 
   constructor(props) {
     super(props)
     this.state = { 
-      data: [],
-      auctions: [],
-      item: "",
-      line1: "",
-      clothprice: []
+      data: [],   /// url init
+      auctions: [],       /// all auctions
+      trackedAuctions: [{itemId: 133678, prices: [12312,41241,1241,1241]}]
     }
   }
 
-  bubbleSort(array, count = 0){
-    let swapped = false;
-    for (let i = 0; i < array.length - count; i++) {
-      if (array[i] > array[i + 1]) {
-        [array[i], array[i +1]] = [array[i + 1], array[i]];
-        swapped = true;
-      }
-    }
-    swapped ? this.bubbleSort(array, count++) : null;
-  }
 
+  handleItemSubmit(typedId){
 
-  showCloth(){
-      var priceArray =[]
+    var priceArray =[]
+
     this.state.auctions.forEach((element,index) => {
 
-      if (element.item == 124437) {
+      if (element.item == typedId.itemId) {
         priceArray.push(element.buyout)
       }
     
     })
-    this.bubbleSort(priceArray)
-    this.setState({clothprice: priceArray})
+
+    bubbleSort(priceArray)
+    console.log("l34",typedId)
+    const newItem = {itemId: typedId.itemId, prices: priceArray}
+    console.log("new item",newItem)
+    this.setState((prevState) => {
+      return {
+        trackedAuctions: prevState.trackedAuctions.concat([newItem])
+      }
+    })
   }
 
 
-  getJson(){
-    var url = this.state.data.files[0].url
-    var request = new XMLHttpRequest()
-    request.open('GET', url)
-    request.responseType = 'json';
-    request.onload = () => {
-       if(request.status === 200){
-        this.setState( { auctions: request.response.auctions } )
-        console.log(this.state.auctions)
-        
-        this.showCloth()
-       } else{
-        console.log("ajj")
-       }
-    }
-    request.send(null)
-  }
+///////////////////////////////////////////////////////////////////////////
 
-  handleClickRequest(){
+  getData(){
     var url = 'https://eu.api.battle.net/wow/auction/data/silvermoon?locale=en_GB&apikey=zh3vgmnxacmrae2awkbq9prguqdxhnpk'
     var request = new XMLHttpRequest()
     request.open('GET', url)
@@ -74,48 +60,32 @@ class Main extends React.Component {
     request.send(null)
   }
 
-  handleInputChange(e){
-    console.log(e.target.value)
-    this.setState({item: e.target.value})
+  getJson(){
+    var url = this.state.data.files[0].url
+    var request = new XMLHttpRequest()
+    request.open('GET', url)
+    request.responseType = 'json';
+    request.onload = () => {
+       if(request.status === 200){
+        this.setState( { auctions: request.response.auctions } )
+        console.log(this.state.auctions)
+        window.alert("data is here")
+        
+       } else{
+        console.log("ajj")
+       }
+    }
+    request.send(null)
   }
-
+  
+ /////////////////////////////////////////////////////////////////////////////// 
 
   render(){
     return(
       <div className="listing">
-       
-        <div className='shows-container'>
-          <button onClick={this.handleClickRequest.bind(this)}>GET DATA</button>
-         
-          <table>
-            <tbody>
-            <tr>
-              <th>itemid</th>
-              <th>name</th>
-              <th>bloodcost</th>
-              <th>lowest price1</th>
-              <th>lowest price2</th>
-              <th>lowest price3</th>
-              <th>lowest price4</th>
-              <th>lowest price5</th>
-              <th>lowest price6</th>
-            </tr>
-            <tr>
-              <td>124437</td>
-              <td>CLOTH</td>
-              <td>{convertToGold(this.state.clothprice[0])}</td>
-              <td>{this.state.clothprice[1]}</td>
-              <td>{this.state.clothprice[2]}</td>
-              <td>{this.state.clothprice[3]}</td>
-              <td>{this.state.clothprice[4]}</td>
-              <td>{this.state.clothprice[5]}</td>
-              <td>{this.state.clothprice[6]}</td>
-              
-            </tr>
-            </tbody>
-          </table>
-        </div>
-      
+        <button onClick={this.getData.bind(this)}>GET DATA</button>
+        <ItemForm handleSubmit={this.handleItemSubmit.bind(this)}/>
+        <ItemTable  trackedAuctions={this.state.trackedAuctions}/>
       </div>
     )
   }
@@ -123,3 +93,32 @@ class Main extends React.Component {
 }
 
 export default Main
+
+
+  // showCloth(){
+  //     var priceArray =[]
+  //   this.state.auctions.forEach((element,index) => {
+
+  //     if (element.item == 141577) {
+  //       priceArray.push(element.buyout)
+  //     }
+    
+  //   })
+  //   bubbleSort(priceArray)
+  //   this.setState({clothprice: priceArray})
+  // }
+
+  // createChildren(element, index){
+  //    return <div key={index}>{element}</div>
+  // }
+
+
+
+// <div>
+//   
+//   {this.state.test.map(this.createChildren)}
+// </div>
+// <List 
+//   prices={this.state.clothprice}
+//   auctions={this.state.auctions}
+// />
